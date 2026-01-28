@@ -1,311 +1,174 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Pemberitahuan & Literasi - Kebudayaan Indonesia</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --bg: #020617;
-            --text: #e5e7eb;
-            --muted: #9ca3af;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, #111827, transparent 55%),
-                radial-gradient(circle at bottom right, #020617, #020617 75%);
-            color: var(--text);
-        }
-
-        .page-wrap {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(90deg, #020617, #0f172a, #2563eb);
-            border-bottom: 1px solid rgba(37, 99, 235, 0.7);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-logo {
-            width: 30px;
-            height: 30px;
-            border-radius: 999px;
-            background: radial-gradient(circle at 30% 30%, #22c55e, #0f766e);
-            box-shadow: 0 0 16px rgba(52, 211, 153, 0.7);
-        }
-
-        .brand-text {
-            font-weight: 600;
-            letter-spacing: .04em;
-            font-size: 0.96rem;
-        }
-
-        .user-mini {
-            font-size: 0.84rem;
-            text-align: right;
-        }
-
-        .user-mini span {
-            display: block;
-        }
-
-        .btn-back {
-            margin-top: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            background: rgba(15, 23, 42, 0.9);
-            color: var(--text);
-            font-size: 0.78rem;
-            text-decoration: none;
-        }
-
-        main {
-            flex: 1;
-            padding: 18px 16px 22px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-bottom: 16px;
-        }
-
-        .card {
-            background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.99));
-            border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: -30%;
-            background:
-                radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 55%),
-                radial-gradient(circle at bottom, rgba(129, 140, 248, 0.18), transparent 55%);
-            opacity: 0.9;
-            pointer-events: none;
-        }
-
-        .card-inner {
-            position: relative;
-            z-index: 1;
-            padding: 16px 16px 18px;
-        }
-
-        .info-form {
-            margin-bottom: 16px;
-            padding: 12px;
-            border-radius: 14px;
-            background: rgba(15, 23, 42, 0.97);
-            border: 1px dashed rgba(148, 163, 184, 0.7);
-        }
-
-        .info-form-row {
-            display: grid;
-            grid-template-columns: 1.1fr 2fr;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .info-form label {
-            font-size: 0.8rem;
-            display: block;
-            margin-bottom: 4px;
-            color: #e5e7eb;
-        }
-
-        .info-input,
-        .info-textarea {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            background: rgba(15, 23, 42, 0.9);
-            color: #e5e7eb;
-            font-size: 0.85rem;
-            padding: 7px 9px;
-            outline: none;
-        }
-
-        .info-input:focus,
-        .info-textarea:focus {
-            border-color: rgba(129, 140, 248, 0.9);
-            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
-        }
-
-        .info-textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .info-submit-btn {
-            margin-top: 6px;
-            border-radius: 999px;
-            border: none;
-            padding: 7px 14px;
-            font-size: 0.82rem;
-            cursor: pointer;
-            background: linear-gradient(135deg, #38bdf8, #6366f1);
-            color: #e5e7eb;
-            font-weight: 600;
-        }
-
-        .info-list {
-            display: grid;
-            gap: 10px;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-
-        .info-item {
-            padding: 10px 11px;
-            border-radius: 10px;
-            background: rgba(15, 23, 42, 0.98);
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            font-size: 0.83rem;
-        }
-
-        .info-item-title {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .info-item-meta {
-            font-size: 0.72rem;
-            color: var(--muted);
-            margin-bottom: 4px;
-        }
-
-        footer {
-            padding: 10px 18px;
-            font-size: 0.78rem;
-            color: #9ca3af;
-            text-align: center;
-            border-top: 1px solid rgba(31, 41, 55, 0.9);
-            background: #020617;
-        }
-
-        @media (max-width: 768px) {
-            .info-form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Literasi Cerita Nenek Moyang • Kebudayaan Indonesia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{
+      --bg:#020617;
+      --card: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#7c5cff;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, #111827, transparent 55%),
+        radial-gradient(circle at bottom right, #020617, #020617 75%);
+      color: var(--text);
+      padding: 22px 14px;
+    }
+    .container{width:min(980px, 100%); margin:0 auto;}
+    .top{
+      display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
+    .title h1{font-size:22px; letter-spacing:-.02em; margin-bottom:4px;}
+    .muted{color:var(--muted); line-height:1.6}
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      text-decoration:none;
+      font-weight:700;
+      font-size:13px;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(12px);
+    }
+    input{
+      width:100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      outline:none;
+      font-size: 14px;
+    }
+    .grid{display:grid; grid-template-columns: 1fr; gap:12px; margin-top:12px;}
+    details{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      background: rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding: 14px 14px;
+      display:flex; justify-content:space-between; gap:12px; align-items:center;
+    }
+    summary::-webkit-details-marker{display:none}
+    .badge{
+      font-weight:900; font-size:12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(124,92,255,.55);
+      background: rgba(124,92,255,.16);
+      color: var(--text);
+      white-space:nowrap;
+    }
+    .content{
+      padding: 0 14px 14px 14px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .footer{margin-top:10px; font-size:12px; color: var(--muted);}
+  </style>
 </head>
 <body>
-<div class="page-wrap">
-    <header>
-        <div class="brand">
-            <div class="brand-logo"></div>
-            <div class="brand-text">Pemberitahuan & Literasi</div>
-        </div>
-        <div class="user-mini">
-            <span>Halo, <strong>{{ $username }}</strong></span>
-            <a href="{{ route('home') }}" class="btn-back">&laquo; Kembali ke Halaman Awal</a>
-        </div>
-    </header>
+  <div class="container">
 
-    <main>
-        <div class="title">Pemberitahuan & Informasi Kebudayaan</div>
-        <div class="subtitle">
-            Tambahkan catatan, fakta unik, atau informasi penting tentang kebudayaan Indonesia.
-        </div>
+    <div class="top">
+      <div class="title">
+        <h1>📚 Literasi Cerita Nenek Moyang</h1>
+        <div class="muted">Ketik nama daerah untuk menemukan cerita dan nilai budaya. (Berbasis folklore/inspirasi literasi)</div>
+      </div>
 
-        <div class="card">
-            <div class="card-inner">
-                <form class="info-form" method="post" action="{{ route('pemberitahuan.store') }}">
-                    @csrf
-                    <input type="hidden" name="aksi" value="tambah_info">
-                    <div class="info-form-row">
-                        <div>
-                            <label for="judul">Judul Informasi</label>
-                            <input
-                                type="text"
-                                id="judul"
-                                name="judul"
-                                class="info-input"
-                                placeholder="Misal: Makna filosofi motif batik parang"
-                            >
-                        </div>
-                        <div>
-                            <label for="isi">Isi Singkat</label>
-                            <textarea
-                                id="isi"
-                                name="isi"
-                                class="info-textarea"
-                                placeholder="Tuliskan informasi, tradisi, cerita rakyat, atau penjelasan singkat..."
-                            ></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" class="info-submit-btn">Tambah Informasi</button>
-                </form>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="chip" href="{{ route('home') }}">🏠 Home</a>
+        <a class="chip" href="{{ route('peta-budaya') }}">🗺️ Peta Budaya</a>
+        <a class="chip" href="{{ route('questions') }}">🎯 Kuis</a>
+      </div>
+    </div>
 
-                <div class="info-list">
-                    @if(empty($info_list))
-                        <div class="info-item">
-                            <div class="info-item-title">Belum ada informasi.</div>
-                            <div class="info-item-meta">Tambahkan informasi pertama kamu menggunakan form di atas.</div>
-                        </div>
-                    @else
-                        @foreach($info_list as $info)
-                            <div class="info-item">
-                                @if(($info['judul'] ?? '') !== '')
-                                    <div class="info-item-title">{{ $info['judul'] }}</div>
-                                @endif
+    <div class="card">
+      <div style="font-weight:900; margin-bottom:10px;">🔎 Cari Daerah</div>
+      <input id="search" placeholder="Contoh: Aceh / Bali / Papua / Maluku / NTT">
+      <div class="footer" style="margin-top:8px;">
+        Tips: ketik sebagian (misal “ja” untuk Jawa).
+      </div>
+    </div>
 
-                                <div class="info-item-meta">
-                                    Ditambahkan pada: {{ $info['waktu'] ?? '' }}
-                                </div>
+    <div class="card">
+      <div style="font-weight:900;">📌 Daftar Cerita</div>
 
-                                <div>{!! nl2br(e($info['isi'] ?? '')) !!}</div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-
+      <div id="list" class="grid">
+        @foreach($stories as $s)
+          <details class="item" data-region="{{ strtolower($s['region']) }}">
+            <summary>
+              <div>
+                <div style="font-weight:900; letter-spacing:-.01em;">{{ $s['region'] }}</div>
+                <div class="muted" style="font-size:13px; margin-top:2px;">{{ $s['title'] }}</div>
+              </div>
+              <span class="badge">Baca</span>
+            </summary>
+            <div class="content">
+              {{ $s['story'] }}
             </div>
-        </div>
-    </main>
+          </details>
+        @endforeach
+      </div>
 
-    <footer>
-        &copy; {{ date('Y') }} Kebudayaan Indonesia • Pemberitahuan & Literasi
-    </footer>
-</div>
+      <div id="empty" class="muted" style="display:none; margin-top:12px;">
+        Tidak ditemukan. Coba ketik: Aceh, Bali, Papua, Maluku, NTT, Kalimantan Timur.
+      </div>
+
+      <div class="footer">
+        Catatan: Cerita ditulis untuk literasi budaya (folklore/inspirasi), bukan referensi sejarah akademik.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const search = document.getElementById('search');
+    const items = Array.from(document.querySelectorAll('.item'));
+    const empty = document.getElementById('empty');
+
+    function norm(s){ return (s||'').toLowerCase().trim(); }
+
+    search.addEventListener('input', () => {
+      const q = norm(search.value);
+      let shown = 0;
+
+      items.forEach(el => {
+        const region = el.getAttribute('data-region');
+        const title = norm(el.querySelector('.muted')?.textContent);
+        const ok = !q || region.includes(q) || title.includes(q);
+
+        el.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+
+      empty.style.display = (shown === 0) ? 'block' : 'none';
+    });
+  </script>
 </body>
 </html>

@@ -1,641 +1,528 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Kuis Sejarah Budaya Indonesia - Mode Sulit</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Kuis Normal • Peta Budaya Indonesia</title>
 
-    <!-- GOOGLE FONT -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        :root{
-            --bg: #020617;
-            --card-bg: rgba(15,23,42,0.78);
-            --card-border: rgba(148,163,184,0.45);
-            --text-main: #e5e7eb;
-            --text-muted: #9ca3af;
-            --accent1: #4f46e5;
-            --accent2: #06b6d4;
-            --accent3: #f97316;
-            --danger: #f97373;
-            --success: #4ade80;
-        }
+  <style>
+    :root{
+      --bg1:#0b1020; --bg2:#141a33;
+      --card: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text:#f4f6ff;
+      --muted: rgba(244,246,255,.74);
+      --accent:#7c5cff;
+      --accent2:#2ee59d;
+      --danger:#ff4d6d;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(46,229,157,.22), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      padding: 26px 16px;
+    }
+    .container{width:min(950px, 100%); margin:0 auto;}
+    .top{display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px;}
+    .title{display:flex; gap:12px; align-items:center;}
+    .badge{
+      width:44px;height:44px;border-radius:16px;
+      background: linear-gradient(135deg, var(--accent2), rgba(255,255,255,.15));
+      display:grid;place-items:center;font-weight:900;
+      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    h1{margin:0; font-size:20px; letter-spacing:-.02em;}
+    .muted{color:var(--muted)}
+    .chip{
+      padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-weight:700; font-size:13px;
+      display:inline-flex; gap:8px; align-items:center;
+      text-decoration:none;
+    }
 
-        *{
-            box-sizing:border-box;
-            margin:0;
-            padding:0;
-        }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      backdrop-filter: blur(12px);
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: linear-gradient(120deg, rgba(124,92,255,.25), rgba(46,229,157,.18), rgba(255,255,255,0));
+      filter: blur(22px);
+      opacity:.6;
+      pointer-events:none;
+    }
+    .card > *{position:relative}
 
-        body{
-            font-family:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-            min-height:100vh;
-            background: radial-gradient(circle at 0% 0%, #1d2244 0, #020617 45%, #000 100%);
-            color: var(--text-main);
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:16px;
-            overflow-x:hidden;
-        }
+    .head{padding:16px 16px 12px; display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+    .progressWrap{flex:1; min-width: 240px;}
+    .progressRow{display:flex; justify-content:space-between; font-weight:800; font-size:13px;}
+    .bar{height:10px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.10); overflow:hidden; margin-top:8px;}
+    .bar > div{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .25s ease;}
+    .timer{
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      font-weight:900; letter-spacing:.02em;
+      display:flex; gap:8px; align-items:center;
+    }
 
-        .bg-glow{
-            position:fixed;
-            inset:0;
-            z-index:-2;
-            background:
-                radial-gradient(circle at 10% 5%, rgba(79,70,229,0.45), transparent 55%),
-                radial-gradient(circle at 90% 10%, rgba(6,182,212,0.35), transparent 55%),
-                radial-gradient(circle at 15% 95%, rgba(249,115,22,0.40), transparent 55%),
-                radial-gradient(circle at 80% 90%, rgba(79,70,229,0.30), transparent 55%);
-            filter: blur(4px);
-        }
-        .bg-grid{
-            position:fixed;
-            inset:0;
-            z-index:-1;
-            background-image:
-                linear-gradient(rgba(148,163,184,0.13) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148,163,184,0.13) 1px, transparent 1px);
-            background-size: 38px 38px;
-            opacity:.45;
-            mask-image: radial-gradient(circle at 50% 20%, black 0%, transparent 70%);
-            pointer-events:none;
-        }
+    .body{padding: 16px;}
+    .q{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:-.01em;
+      margin: 0 0 12px;
+      line-height: 1.4;
+      animation: fadeIn .22s ease;
+    }
+    @keyframes fadeIn {from{opacity:0; transform: translateY(4px)} to{opacity:1; transform:none}}
 
-        .quiz-shell{
-            width:min(1040px, 100%);
-            position:relative;
-        }
+    .answers{display:grid; gap:10px; margin-top:10px;}
+    .ans{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      border-radius: 16px;
+      padding: 12px 12px;
+      cursor:pointer;
+      display:flex; gap:10px; align-items:flex-start;
+      transition: transform .10s ease, border-color .10s ease;
+    }
+    .ans:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22);}
+    .ans input{margin-top:4px}
+    .ans strong{display:block}
+    .ans.selected{border-color: rgba(124,92,255,.55); background: rgba(124,92,255,.08);}
 
-        header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:18px;
-            padding-inline:4px;
-        }
+    .feedback{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      display:none;
+      animation: fadeIn .22s ease;
+      line-height:1.55;
+    }
+    .feedback.good{border-color: rgba(46,229,157,.45); background: rgba(46,229,157,.10);}
+    .feedback.bad{border-color: rgba(255,77,109,.55); background: rgba(255,77,109,.10);}
 
-        .brand{
-            display:flex;
-            align-items:center;
-            gap:10px;
-        }
-        .brand-logo{
-            width:40px;height:40px;
-            border-radius: 14px;
-            background: conic-gradient(from 180deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
-            display:grid;place-items:center;
-            color:#020617;
-            font-weight:900;
-            box-shadow:0 10px 30px rgba(59,130,246,0.55);
-        }
-        .brand-text b{
-            display:block;
-            font-size:.96rem;
-            letter-spacing:-0.02em;
-        }
-        .brand-text span{
-            display:block;
-            font-size:.75rem;
-            color:var(--text-muted);
-            text-transform:uppercase;
-            letter-spacing:.16em;
-        }
+    .actions{display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap; margin-top: 14px;}
+    .btn{
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      cursor:pointer;
+      transition: transform .08s ease;
+    }
+    .btn:active{transform: translateY(1px) scale(.99);}
+    .btn-primary{
+      border: 1px solid rgba(124,92,255,.55);
+      background: linear-gradient(135deg, rgba(124,92,255,.55), rgba(46,229,157,.22));
+    }
+    .btn-danger{
+      border: 1px solid rgba(255,77,109,.55);
+      background: rgba(255,77,109,.12);
+    }
 
-        .user-mini{
-            font-size:.9rem;
-            color:var(--text-muted);
-            text-align:right;
-        }
-        .user-mini strong{
-            color: #eab308;
-        }
-
-        .quiz-card{
-            position:relative;
-            border-radius:24px;
-            padding:22px 22px 20px;
-            background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.85));
-            border:1px solid var(--card-border);
-            box-shadow:
-                0 26px 80px rgba(15,23,42,0.95),
-                0 0 0 1px rgba(148,163,184,0.15);
-            overflow:hidden;
-            backdrop-filter: blur(18px);
-        }
-        .quiz-card::before{
-            content:"";
-            position:absolute;
-            inset:-40%;
-            background:
-                radial-gradient(circle at 10% 0%, rgba(79,70,229,0.22), transparent 55%),
-                radial-gradient(circle at 80% 30%, rgba(6,182,212,0.18), transparent 55%),
-                radial-gradient(circle at 40% 100%, rgba(249,115,22,0.20), transparent 55%);
-            opacity:.85;
-            z-index:0;
-            pointer-events:none;
-        }
-        .quiz-inner{
-            position:relative;
-            z-index:1;
-        }
-
-        .quiz-top{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:12px;
-            margin-bottom:16px;
-        }
-        .badge-mode{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:6px 12px;
-            border-radius:999px;
-            background: rgba(15,23,42,0.88);
-            border:1px solid rgba(148,163,184,0.55);
-            font-size:.76rem;
-            letter-spacing:.14em;
-            text-transform:uppercase;
-            color:var(--text-muted);
-        }
-        .badge-dot{
-            width:9px;height:9px;border-radius:999px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, #22c55e);
-            box-shadow:0 0 0 5px rgba(34,197,94,0.20);
-        }
-
-        .progress{
-            flex-shrink:0;
-            display:flex;
-            flex-direction:column;
-            gap:4px;
-            align-items:flex-end;
-        }
-        .progress span{
-            font-size:.78rem;
-            color:var(--text-muted);
-        }
-        .progress-bar{
-            width:140px;
-            height:6px;
-            border-radius:999px;
-            background:rgba(30,64,175,0.65);
-            overflow:hidden;
-            box-shadow:inset 0 0 4px rgba(15,23,42,0.85);
-        }
-        .progress-fill{
-            height:100%;
-            width:0%;
-            border-radius:999px;
-            background:linear-gradient(90deg, var(--accent2), var(--accent1), var(--accent3));
-            transition:width .25s ease-out;
-        }
-
-        .quiz-title{
-            font-size:1.4rem;
-            font-weight:800;
-            letter-spacing:-0.02em;
-            margin-bottom:4px;
-        }
-        .quiz-sub{
-            font-size:.92rem;
-            color:var(--text-muted);
-            margin-bottom:14px;
-        }
-
-        .question-box{
-            margin-top:8px;
-            padding:14px 14px 16px;
-            border-radius:18px;
-            background: rgba(15,23,42,0.82);
-            border:1px solid rgba(148,163,184,0.50);
-            box-shadow:0 16px 45px rgba(15,23,42,0.85);
-        }
-
-        #question-text{
-            font-size:1.08rem;
-            font-weight:600;
-            line-height:1.6;
-        }
-
-        #options-container{
-            margin-top:14px;
-            display:grid;
-            grid-template-columns:repeat(2, minmax(0,1fr));
-            gap:10px;
-        }
-
-        .option-btn{
-            position:relative;
-            border:none;
-            border-radius:14px;
-            padding:10px 12px;
-            background: radial-gradient(circle at 0% 0%, rgba(79,70,229,0.70), rgba(15,23,42,0.96));
-            color:var(--text-main);
-            font-size:.92rem;
-            text-align:left;
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            overflow:hidden;
-            transition: transform .12s ease, box-shadow .12s ease, background .15s ease, border .15s ease;
-            box-shadow:0 14px 36px rgba(15,23,42,0.9);
-        }
-        .option-btn::before{
-            content:"";
-            position:absolute;
-            inset:-40%;
-            background:radial-gradient(circle at 0% 0%, rgba(255,255,255,0.12), transparent 60%);
-            opacity:0;
-            transition:opacity .18s ease;
-        }
-        .option-label{
-            width:24px;height:24px;border-radius:999px;
-            border:1px solid rgba(226,232,240,0.6);
-            display:grid;place-items:center;
-            font-size:.78rem;
-            flex-shrink:0;
-            background:rgba(15,23,42,0.75);
-        }
-        .option-text{
-            flex:1;
-        }
-
-        .option-btn:hover{
-            transform:translateY(-1px);
-            box-shadow:0 18px 46px rgba(15,23,42,0.95);
-        }
-        .option-btn:hover::before{
-            opacity:1;
-        }
-
-        .option-btn.correct{
-            background:linear-gradient(135deg, rgba(34,197,94,0.12), rgba(21,128,61,0.85));
-            border:1px solid rgba(74,222,128,0.85);
-        }
-        .option-btn.wrong{
-            background:linear-gradient(135deg, rgba(248,113,113,0.10), rgba(127,29,29,0.90));
-            border:1px solid rgba(248,113,113,0.85);
-        }
-        .option-btn.disabled{
-            cursor:default;
-            opacity:.92;
-            box-shadow:none;
-            transform:none;
-        }
-
-        #explanation{
-            margin-top:12px;
-            font-size:.9rem;
-            color:var(--text-muted);
-            padding:10px 12px;
-            border-radius:14px;
-            background:rgba(15,23,42,0.86);
-            border:1px solid rgba(148,163,184,0.55);
-            display:none;
-        }
-        #explanation strong{
-            display:block;
-            margin-bottom:4px;
-        }
-
-        .meta-row{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:10px;
-            margin-top:14px;
-            font-size:.85rem;
-            color:var(--text-muted);
-        }
-        .score-pill{
-            padding:6px 10px;
-            border-radius:999px;
-            background:rgba(15,23,42,0.88);
-            border:1px solid rgba(148,163,184,0.60);
-            font-weight:600;
-        }
-
-        #next-btn{
-            border:none;
-            border-radius:999px;
-            padding:9px 18px;
-            background:linear-gradient(135deg, #22c55e, #16a34a);
-            color:#022c22;
-            font-weight:800;
-            font-size:.86rem;
-            text-transform:uppercase;
-            letter-spacing:.12em;
-            cursor:pointer;
-            display:none;
-            box-shadow:0 16px 40px rgba(22,163,74,0.7);
-            transition: transform .10s ease, box-shadow .10s ease, filter .12s ease;
-        }
-        #next-btn:hover{
-            transform:translateY(-1px);
-            filter:brightness(1.05);
-            box-shadow:0 20px 55px rgba(22,163,74,0.9);
-        }
-        #next-btn:active{
-            transform:translateY(1px);
-            box-shadow:0 8px 24px rgba(22,163,74,0.8);
-        }
-
-        @media (max-width:720px){
-            .quiz-card{ padding:18px 14px 16px; }
-            #options-container{ grid-template-columns:1fr; }
-            .quiz-title{ font-size:1.22rem; }
-        }
-    </style>
+    .result{
+      display:none;
+      padding: 18px;
+    }
+    .score{
+      font-size:34px;
+      font-weight: 900;
+      letter-spacing:-.02em;
+      margin: 0;
+    }
+    .review{
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .reviewItem{
+      padding:12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+    }
+    .ok{color: rgba(46,229,157,.95); font-weight:900;}
+    .no{color: rgba(255,77,109,.95); font-weight:900;}
+  </style>
 </head>
 <body>
-<div class="bg-glow"></div>
-<div class="bg-grid"></div>
-
-<div class="quiz-shell">
-    <header>
-        <div class="brand">
-            <div class="brand-logo">KI</div>
-            <div class="brand-text">
-                <b>Kebudayaan Indonesia</b>
-                <span>Kuis Mode Sulit</span>
-            </div>
+  <div class="container">
+    <div class="top">
+      <div class="title">
+        <div class="badge">✅</div>
+        <div>
+          <h1>Kuis Normal</h1>
+          <div class="muted" style="font-size:13px;">Halo, <strong>{{ session('username','User') }}</strong> • Fokus & santai 😄</div>
         </div>
-        <div class="user-mini">
-            Selamat datang,<br><strong>{{ session('username', 'Pengguna') }}</strong>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="chip" href="{{ route('questions') }}">⬅ Menu</a>
+        <a class="chip" href="{{ route('peta-budaya') }}">🗺️ Peta</a>
+      </div>
+    </div>
+
+    <div class="card" id="quizCard">
+      <div class="head">
+        <div class="progressWrap">
+          <div class="progressRow">
+            <div>Progress: <span id="idxText">1</span>/<span id="totalText">0</span></div>
+            <div>Skor: <span id="scoreText">0</span></div>
+          </div>
+          <div class="bar"><div id="barFill"></div></div>
         </div>
-    </header>
 
-    <main class="quiz-card">
-        <div class="quiz-inner">
-            <div class="quiz-top">
-                <div class="badge-mode">
-                    <span class="badge-dot"></span>
-                    MODE LATIHAN • SULIT
-                </div>
-                <div class="progress">
-                    <span id="progress-text">Soal 1 / 15</span>
-                    <div class="progress-bar">
-                        <div id="progress-fill" class="progress-fill"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="quiz-title">Kuis Sejarah & Budaya Indonesia (Tingkat Sulit)</div>
-            <div class="quiz-sub">
-                Soal-soal ini menuntut pemahaman lebih dalam: konsep, tokoh, naskah, dan konteks sejarah-budaya Nusantara.
-            </div>
-
-            <section class="question-box">
-                <div id="question-text"></div>
-                <div id="options-container"></div>
-
-                <div id="explanation"></div>
-
-                <div class="meta-row">
-                    <span class="score-pill" id="score-text">Poin: 0</span>
-                    <button id="next-btn">Soal Berikutnya</button>
-                </div>
-            </section>
+        <div class="timer" title="Timer (opsional)">
+          ⏱ <span id="timerText">--</span>
         </div>
-    </main>
-</div>
+      </div>
 
-<script>
+      <div class="body" id="play">
+        <div class="q" id="qText">Memuat pertanyaan…</div>
+
+        <div class="answers" id="answers"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="actions">
+          <button class="btn btn-danger" id="resetBtn" type="button">Ulangi</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="skipBtn" type="button">Lewati</button>
+            <button class="btn btn-primary" id="nextBtn" type="button">Lanjut →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        <p class="score">🎉 Skor kamu: <span id="finalScore">0</span></p>
+        <p class="muted" style="margin:8px 0 0; line-height:1.6;">
+          Ini ringkasan jawabanmu. Cek yang salah biar makin paham budaya Indonesia.
+        </p>
+
+        <div class="review" id="review"></div>
+
+        <div class="actions" style="margin-top:16px;">
+          <a class="btn" href="{{ route('questions') }}">⬅ Kembali ke Menu</a>
+          <button class="btn btn-primary" id="playAgain" type="button">Main Lagi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="clickSfx" src="{{ asset('click.mp3') }}" preload="auto"></audio>
+
+  <script>
+    async function sendResultToServer(payload) {
+  const token = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute('content');
+
+  const res = await fetch("{{ route('quiz.results.store') }}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": token,
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    console.error("Gagal simpan hasil kuis:", txt);
+  }
+}
+    // =========================
+    // SOAL MODE NORMAL (contoh — kamu boleh ganti)
+    // =========================
     const questions = [
-    {
-        question: "Kitab perjalanan yang sering dijadikan sumber utama untuk merekonstruksi struktur politik dan ritual Kerajaan Majapahit pada abad ke-14 adalah…",
-        option_a: "Pararaton",
-        option_b: "Negarakertagama",
-        option_c: "Sutasoma",
-        option_d: "Tantu Panggelaran",
-        correct_answer: "b",
-        explanation: "Negarakertagama karya Mpu Prapanca memuat deskripsi rinci perjalanan Hayam Wuruk ke berbagai daerah, struktur pemerintahan, dan ritual negara Majapahit."
-    },
-    {
-        question: "Istilah 'sinkretisme' dalam konteks agama Jawa pada masa Hindu–Buddha dan Islam merujuk pada…",
-        option_a: "Penolakan total terhadap kepercayaan lama",
-        option_b: "Penggabungan unsur kepercayaan berbeda menjadi sistem baru yang relatif harmonis",
-        option_c: "Penghapusan simbol-simbol lokal demi kemurnian agama impor",
-        option_d: "Pemisahan tegas antara ritual negara dan ritual desa",
-        correct_answer: "b",
-        explanation: "Sinkretisme adalah proses percampuran unsur kepercayaan yang berbeda (Hindu, Buddha, Islam, animisme) menjadi praktik keagamaan baru yang tampak menyatu."
-    },
-    {
-        question: "Konsep 'tanah lungguh' dalam struktur sosial Jawa tradisional berkaitan dengan…",
-        option_a: "Tanah yang hanya boleh digarap oleh keluarga raja",
-        option_b: "Tanah jabatan yang menjadi sumber nafkah pejabat dan abdi dalem",
-        option_c: "Tanah persawahan milik bersama satu desa",
-        option_d: "Tanah yang dikuasai langsung pemerintah kolonial",
-        correct_answer: "b",
-        explanation: "Tanah lungguh adalah tanah jabatan yang hasilnya menjadi imbalan bagi pejabat atau abdi dalem, menggantikan gaji uang dalam sistem birokrasi tradisional."
-    },
-    {
-        question: "Salah satu ciri khas gerakan Pujangga Baru dalam sastra Indonesia awal abad ke-20 adalah…",
-        option_a: "Bahasa Melayu pasar apa adanya tanpa idealisme",
-        option_b: "Penekanan pada individualisme dan nasionalisme modern",
-        option_c: "Penulisan kembali hikayat klasik dengan huruf Arab-Melayu",
-        option_d: "Penggunaan eksklusif bahasa Belanda sebagai bahasa sastra",
-        correct_answer: "b",
-        explanation: "Pujangga Baru (Armijn Pane, Sutan Takdir Alisjahbana, dkk.) menonjolkan semangat individualisme, pembaruan, dan nasionalisme dalam sastra Indonesia modern."
-    },
-    {
-        question: "Dalam wayang purwa, tokoh Semar dan para punakawan memiliki fungsi penting sebagai…",
-        option_a: "Simbol murni kelucuan tanpa makna lain",
-        option_b: "Perwujudan resmi dewa-dewa utama India",
-        option_c: "Jembatan antara dunia para ksatria dan suara rakyat kecil serta kritik sosial",
-        option_d: "Tokoh antagonis yang selalu melawan kebenaran",
-        correct_answer: "c",
-        explanation: "Punakawan (Semar, Gareng, Petruk, Bagong) sering menjadi saluran kritik sosial, refleksi moral, dan suara rakyat dalam lakon wayang."
-    },
-    {
-        question: "Tradisi lisan 'Hikayat Hang Tuah' dari kawasan Melayu–Nusantara banyak dibaca sebagai…",
-        option_a: "Catatan kronologis resmi Kesultanan Malaka",
-        option_b: "Dongeng tanpa kaitan dengan sejarah sama sekali",
-        option_c: "Kisah kepahlawanan yang memuat konflik antara loyalitas pada raja dan nurani pribadi",
-        option_d: "Naskah hukum dagang antarbangsa",
-        correct_answer: "c",
-        explanation: "Hikayat Hang Tuah memuat tema kuat tentang loyalitas ekstrem Hang Tuah kepada raja vs sikap Hang Jebat yang mempertanyakan keadilan."
-    },
-    {
-        question: "Istilah 'orientalisme' dalam kajian budaya juga berpengaruh pada cara pelukis dan penulis Eropa menggambarkan Hindia Belanda. Yang dimaksud orientalisme adalah…",
-        option_a: "Upaya akademik netral untuk memetakan budaya Timur",
-        option_b: "Cara pandang yang kerap menempatkan Timur sebagai eksotis, irasional, dan inferior dibanding Barat",
-        option_c: "Gerakan perlawanan seniman Timur terhadap Barat",
-        option_d: "Kebijakan resmi pemerintah kolonial tentang pendidikan",
-        correct_answer: "b",
-        explanation: "Orientalisme (misalnya dalam lukisan Mooi Indie) sering merepresentasikan Timur sebagai eksotis dan 'lain', sehingga memperkuat hierarki kolonial."
-    },
-    {
-        question: "Salah satu perbedaan utama corak batik pesisir (misalnya Pekalongan) dengan batik keraton (misalnya Yogyakarta–Solo) adalah…",
-        option_a: "Batik pesisir dilarang menggunakan warna cerah",
-        option_b: "Batik keraton tidak mengenal motif simbolis",
-        option_c: "Batik pesisir lebih banyak dipengaruhi motif Tiongkok, Eropa, dan warna-warna cerah",
-        option_d: "Batik keraton dibuat dengan teknik cetak, batik pesisir selalu tulis",
-        correct_answer: "c",
-        explanation: "Batik pesisir mendapat pengaruh kuat dari pedagang Tiongkok, Arab, dan Eropa sehingga motifnya lebih bebas dan warnanya lebih cerah."
-    },
-    {
-        question: "Gerakan 'Politik Etis' yang dicanangkan Belanda sekitar tahun 1901 berdampak besar pada…",
-        option_a: "Penghapusan pajak bagi penduduk pribumi",
-        option_b: "Pendirian sekolah-sekolah modern yang melahirkan kaum terpelajar bumiputra",
-        option_c: "Peniadaan seluruh kerja paksa dan tanam paksa",
-        option_d: "Penyerahan kedaulatan lebih awal kepada Indonesia",
-        correct_answer: "b",
-        explanation: "Politik Etis (irigasi, edukasi, emigrasi) membuka akses pendidikan bagi bumiputra, melahirkan kaum cendekia yang kemudian memimpin pergerakan nasional."
-    },
-    {
-        question: "Dalam struktur kepercayaan tradisional Jawa, istilah 'Ratu Adil' merujuk pada…",
-        option_a: "Gelar resmi raja Mataram Islam",
-        option_b: "Figur mesianis yang diyakini akan datang memulihkan keadilan dan tatanan dunia",
-        option_c: "Pemimpin desa terpilih dalam musyawarah",
-        option_d: "Sebutan untuk pejabat kolonial yang adil",
-        correct_answer: "b",
-        explanation: "Mitos Ratu Adil adalah figur mesianis yang akan muncul ketika ketidakadilan memuncak, menjadi sumber harapan dan kadang legitimasi gerakan perlawanan."
-    },
-    {
-        question: "Salah satu alasan penting mengapa Candi Prambanan sempat lama terbengkalai dan rusak berat adalah…",
-        option_a: "Dibongkar sengaja oleh kerajaan Islam",
-        option_b: "Serangkaian gempa bumi dan letusan gunung berapi serta ditinggalkannya pusat politik di wilayah tersebut",
-        option_c: "Dijadikan tambang batu oleh VOC secara resmi",
-        option_d: "Terendam banjir laut selama berabad-abad",
-        correct_answer: "b",
-        explanation: "Perpindahan pusat politik, gempa, dan letusan Merapi mengakibatkan Prambanan runtuh dan lama terbengkalai sebelum dipugar pada era modern."
-    },
-    {
-        question: "Dalam musik tradisional Jawa, konsep 'pathet' berhubungan dengan…",
-        option_a: "Jumlah pemain gamelan",
-        option_b: "Sistem laras pentatonik diatonis",
-        option_c: "Rasa atau mode musikal tertentu yang menentukan suasana dan pemakaian nada dalam suatu gending",
-        option_d: "Volume suara yang harus dimainkan",
-        correct_answer: "c",
-        explanation: "Pathet adalah konsep mode musikal yang menentukan pilihan nada, suasana emosional, dan penempatan lagu dalam siklus pertunjukan."
-    },
-    {
-        question: "Perkembangan film Indonesia awal (era Usmar Ismail) sering dibaca sebagai…",
-        option_a: "Perpanjangan propaganda kolonial Belanda",
-        option_b: "Usaha memadukan bahasa film modern dengan tema identitas nasional pascakemerdekaan",
-        option_c: "Adaptasi langsung film Hollywood tanpa lokalitas",
-        option_d: "Proyek eksklusif untuk konsumsi penonton Eropa",
-        correct_answer: "b",
-        explanation: "Usmar Ismail dan sezamannya berupaya menggunakan medium film untuk mengartikulasikan pengalaman dan identitas Indonesia merdeka."
-    },
-    {
-        question: "Dalam studi budaya, istilah 'hibriditas' (hybridity) relevan dengan kebudayaan Indonesia karena…",
-        option_a: "Indonesia hanya memiliki satu sumber budaya murni",
-        option_b: "Kebudayaan Indonesia terbentuk dari percampuran beragam pengaruh lokal dan global yang terus dinegosiasikan",
-        option_c: "Budaya Indonesia menolak seluruh pengaruh asing",
-        option_d: "Hibriditas berarti hilangnya semua budaya lokal",
-        correct_answer: "b",
-        explanation: "Hibriditas menekankan bahwa identitas budaya tidak statis, melainkan hasil pertemuan, negosiasi, dan percampuran berbagai tradisi dan pengaruh."
-    },
-    {
-        question: "Fenomena 'kebudayaan pop' (pop culture) di kota-kota besar Indonesia pasca-1998 berkaitan erat dengan…",
-        option_a: "Menguatnya sensor negara atas musik dan film",
-        option_b: "Dibukanya keran globalisasi media, internet, dan industri kreatif yang memengaruhi gaya hidup generasi muda",
-        option_c: "Pelaksanaan kembali Politik Etis",
-        option_d: "Kembali ke pola hiburan tradisional murni",
-        correct_answer: "b",
-        explanation: "Pasca-1998, liberalisasi politik dan perkembangan media/internet mempercepat arus budaya global, membentuk budaya pop urban yang sangat cair dan hibrid."
-    }
-];
+     { question: "Konsep kosmologi pada rumah adat Tongkonan tercermin dari orientasi bangunan yang menghadap ke arah…", options: ["Utara sebagai simbol asal leluhur","Timur sebagai matahari terbit","Selatan sebagai alam roh","Barat sebagai akhir kehidupan"], answer: "Utara sebagai simbol asal leluhur", explanation: "Tongkonan menghadap utara karena dipercaya sebagai arah asal leluhur suku Toraja." },
+{ question: "Motif Batik Kawung secara filosofis melambangkan…", options: ["Pengendalian diri dan keadilan","Kesuburan tanah","Keberanian prajurit","Kemakmuran perdagangan"], answer: "Pengendalian diri dan keadilan", explanation: "Motif Kawung melambangkan keseimbangan, keadilan, dan pengendalian diri." },
+{ question: "Perbedaan utama Tari Bedhaya dan Tari Srimpi terletak pada…", options: ["Jumlah penari dan konteks sakral","Jenis musik pengiring","Busana yang digunakan","Asal daerah pertunjukan"], answer: "Jumlah penari dan konteks sakral", explanation: "Bedhaya lebih sakral dengan jumlah penari tertentu, sedangkan Srimpi bersifat lebih profan." },
+{ question: "Bentuk atap rumah adat Minangkabau mencerminkan prinsip hidup masyarakatnya yang disebut…", options: ["Alam takambang jadi guru","Adat basandi syarak","Bersatu kita teguh","Gotong royong"], answer: "Alam takambang jadi guru", explanation: "Bentuk gonjong terinspirasi dari alam sebagai sumber pembelajaran hidup." },
+{ question: "Fungsi Tari Kecak pada masa awal perkembangannya lebih bersifat…", options: ["Ritual religius","Hiburan rakyat","Pertunjukan wisata","Sarana diplomasi budaya"], answer: "Ritual religius", explanation: "Kecak berasal dari ritual Sanghyang yang bersifat sakral." },
+{ question: "Makna simbolis pemberian kain Ulos dalam budaya Batak adalah…", options: ["Pemberian doa dan restu kehidupan","Penanda status ekonomi","Simbol perjanjian politik","Hadiah pernikahan semata"], answer: "Pemberian doa dan restu kehidupan", explanation: "Ulos mengandung doa, harapan, dan kasih sayang." },
+{ question: "Rumah adat Baileo tidak memiliki sekat karena melambangkan…", options: ["Keterbukaan dan musyawarah","Keterbatasan teknologi","Kehidupan nomaden","Hierarki adat"], answer: "Keterbukaan dan musyawarah", explanation: "Baileo mencerminkan keterbukaan dalam pengambilan keputusan adat." },
+{ question: "Ciri utama Tari Saman yang membedakannya dari tarian lain adalah…", options: ["Keseragaman gerak kolektif ekstrem","Penggunaan properti","Busana berlapis emas","Iringan alat musik tradisional"], answer: "Keseragaman gerak kolektif ekstrem", explanation: "Tari Saman menuntut kekompakan gerak yang sangat presisi." },
+{ question: "Ukiran khas Dayak sering mengandung motif spiral yang melambangkan…", options: ["Siklus kehidupan dan alam semesta","Kekuatan militer","Kejayaan kerajaan","Kesuburan tanah"], answer: "Siklus kehidupan dan alam semesta", explanation: "Motif spiral mencerminkan hubungan manusia, alam, dan roh." },
+{ question: "Tari Cakalele secara historis berfungsi sebagai…", options: ["Media penyemangat sebelum perang","Ritual panen","Penyambutan tamu kerajaan","Pertunjukan hiburan istana"], answer: "Media penyemangat sebelum perang", explanation: "Cakalele digunakan untuk membangkitkan semangat juang." },
+{ question: "Bentuk rumah adat Honai yang rendah dan tertutup bertujuan untuk…", options: ["Menjaga suhu hangat di pegunungan","Menghindari serangan musuh","Menghemat bahan bangunan","Menunjukkan status sosial"], answer: "Menjaga suhu hangat di pegunungan", explanation: "Honai dirancang sesuai kondisi alam Papua yang dingin." },
+{ question: "Reog Ponorogo memiliki tokoh utama Singa Barong yang melambangkan…", options: ["Kekuatan dan kekuasaan","Kesuburan alam","Kehidupan laut","Kesetiaan rakyat"], answer: "Kekuatan dan kekuasaan", explanation: "Singa Barong melambangkan kekuatan penguasa." },
+{ question: "Sistem nada Slendro dan Pelog pada gamelan menunjukkan bahwa musik tradisional Jawa bersifat…", options: ["Non-diatonis dan khas lokal","Universal dan global","Modern dan adaptif","Sederhana dan terbatas"], answer: "Non-diatonis dan khas lokal", explanation: "Sistem nada gamelan berbeda dari musik Barat." },
+{ question: "Akulturasi budaya pada Tari Zapin terlihat dari perpaduan unsur…", options: ["Melayu dan Islam","Cina dan Jawa","India dan Bali","Eropa dan lokal"], answer: "Melayu dan Islam", explanation: "Zapin berkembang seiring penyebaran Islam." },
+{ question: "Baju Bodo mencerminkan stratifikasi sosial karena…", options: ["Warna menunjukkan status pemakai","Bahan hanya untuk bangsawan","Digunakan dalam ritual rahasia","Dihiasi emas khusus"], answer: "Warna menunjukkan status pemakai", explanation: "Warna Baju Bodo menandakan usia dan status sosial." },
+{ question: "Rumah Lamin memperlihatkan nilai budaya Dayak berupa…", options: ["Kehidupan kolektif dan kebersamaan","Individualisme tinggi","Kepemimpinan absolut","Mobilitas tinggi"], answer: "Kehidupan kolektif dan kebersamaan", explanation: "Lamin dihuni bersama oleh banyak keluarga." },
+{ question: "Motif kain Tapis Lampung sering dikaitkan dengan simbol…", options: ["Kehidupan, status, dan alam","Perdagangan maritim","Peperangan antar suku","Teknologi pertanian"], answer: "Kehidupan, status, dan alam", explanation: "Motif Tapis menggambarkan nilai kehidupan masyarakat Lampung." },
+{ question: "Gerakan melingkar pada Tari Pakarena melambangkan…", options: ["Siklus kehidupan manusia","Kemenangan perang","Kesedihan mendalam","Kekuasaan raja"], answer: "Siklus kehidupan manusia", explanation: "Gerakan Pakarena mencerminkan awal dan akhir kehidupan." },
+{ question: "Rumah adat Bolon mencerminkan sistem kekerabatan Batak yang bersifat…", options: ["Patrilineal","Matrilineal","Bilateral","Komunal bebas"], answer: "Patrilineal", explanation: "Masyarakat Batak menganut sistem patrilineal." },
+{ question: "Makna utama ornamen burung Cendrawasih dalam budaya Papua adalah…", options: ["Keindahan, kemuliaan, dan spiritualitas","Kesuburan tanah","Kemakmuran ekonomi","Kekuatan militer"], answer: "Keindahan, kemuliaan, dan spiritualitas", explanation: "Cendrawasih dianggap suci dan bernilai spiritual tinggi." }
+    ];
 
-    let currentIndex = 0;
+    // ====== SETTINGS ======
+    const SCORE_PER_Q = 10;
+    const TIMER_SECONDS = 25; // 0 = off, misal 20 untuk 20 detik/soal
+
+    // ====== STATE ======
+    let idx = 0;
     let score = 0;
-    let hasAnswered = false;
+    let selected = null;
+    let locked = false;
+    let answersLog = []; // {q, picked, correct, explanation}
+    let tLeft = TIMER_SECONDS;
+    let tInt = null;
 
-    const questionTextEl = document.getElementById("question-text");
-    const optionsContainerEl = document.getElementById("options-container");
-    const explanationEl = document.getElementById("explanation");
-    const scoreTextEl = document.getElementById("score-text");
-    const nextBtnEl = document.getElementById("next-btn");
-    const progressTextEl = document.getElementById("progress-text");
-    const progressFillEl = document.getElementById("progress-fill");
+    const el = (id) => document.getElementById(id);
+    const qText = el('qText');
+    const answersEl = el('answers');
+    const feedbackEl = el('feedback');
+    const idxText = el('idxText');
+    const totalText = el('totalText');
+    const scoreText = el('scoreText');
+    const barFill = el('barFill');
+    const timerText = el('timerText');
+    const clickSfx = el('clickSfx');
 
-    function renderQuestion() {
-        const q = questions[currentIndex];
-        hasAnswered = false;
+    const play = el('play');
+    const result = el('result');
+    const finalScore = el('finalScore');
+    const review = el('review');
 
-        progressTextEl.textContent = `Soal ${currentIndex + 1} / ${questions.length}`;
-        const progressPercent = (currentIndex / questions.length) * 100;
-        progressFillEl.style.width = progressPercent + "%";
+    const nextBtn = el('nextBtn');
+    const skipBtn = el('skipBtn');
+    const resetBtn = el('resetBtn');
+    const playAgain = el('playAgain');
 
-        questionTextEl.textContent = q.question;
-        explanationEl.style.display = "none";
-        explanationEl.innerHTML = "";
+    function sfx(){ try { clickSfx.currentTime = 0; clickSfx.play(); } catch(e){} }
 
-        optionsContainerEl.innerHTML = "";
-        const options = [
-            { key: "a", label: "A", text: q.option_a },
-            { key: "b", label: "B", text: q.option_b },
-            { key: "c", label: "C", text: q.option_c },
-            { key: "d", label: "D", text: q.option_d },
-        ];
-
-        options.forEach(opt => {
-            const btn = document.createElement("button");
-            btn.className = "option-btn";
-            btn.innerHTML = `<span class="option-label">${opt.label}</span><span class="option-text">${opt.text}</span>`;
-            btn.addEventListener("click", () => handleAnswer(opt.key, btn));
-            optionsContainerEl.appendChild(btn);
-        });
-
-        nextBtnEl.style.display = "none";
+    function setProgress(){
+      totalText.textContent = questions.length;
+      idxText.textContent = Math.min(idx + 1, questions.length);
+      scoreText.textContent = score;
+      const pct = questions.length ? (idx / questions.length) * 100 : 0;
+      barFill.style.width = pct + '%';
     }
 
-    function handleAnswer(selectedKey, clickedBtn) {
-        if (hasAnswered) return;
-        hasAnswered = true;
-
-        const q = questions[currentIndex];
-        const allButtons = document.querySelectorAll(".option-btn");
-        allButtons.forEach(btn => btn.classList.add("disabled"));
-
-        allButtons.forEach(btn => {
-            const label = btn.querySelector(".option-label").textContent.trim();
-            const keyFromLabel = label.toLowerCase();
-            if (keyFromLabel === q.correct_answer) {
-                btn.classList.add("correct");
-            }
-        });
-
-        if (selectedKey === q.correct_answer) {
-            score += 10;
-            clickedBtn.classList.add("correct");
-            explanationEl.innerHTML =
-                `<strong style="color:var(--success)">Jawaban kamu benar!</strong>${q.explanation}`;
-        } else {
-            clickedBtn.classList.add("wrong");
-            explanationEl.innerHTML =
-                `<strong style="color:var(--danger)">Jawaban kamu belum tepat.</strong>${q.explanation}`;
+    function startTimer(){
+      if (TIMER_SECONDS <= 0) { timerText.textContent = '--'; return; }
+      stopTimer();
+      tLeft = TIMER_SECONDS;
+      timerText.textContent = tLeft + 's';
+      tInt = setInterval(() => {
+        tLeft--;
+        timerText.textContent = tLeft + 's';
+        if (tLeft <= 0){
+          stopTimer();
+          if (!locked){
+            lockAndFeedback(null, false, "Waktu habis. Coba lebih cepat ya!");
+          }
         }
-
-        explanationEl.style.display = "block";
-        scoreTextEl.textContent = `Poin: ${score}`;
-        nextBtnEl.style.display = "inline-flex";
+      }, 1000);
     }
 
-    nextBtnEl.addEventListener("click", () => {
-        if (currentIndex < questions.length - 1) {
-            currentIndex++;
-            renderQuestion();
-        } else {
-            progressFillEl.style.width = "100%";
-            questionTextEl.textContent = "Kuis selesai! 🎉";
-            optionsContainerEl.innerHTML = "";
-            explanationEl.style.display = "block";
-            explanationEl.innerHTML =
-                `Kamu telah menyelesaikan semua soal mode sulit.<br><br><strong>Total poin: ${score} dari ${questions.length * 10}.</strong>`;
-            nextBtnEl.style.display = "none";
+    function stopTimer(){ if (tInt) clearInterval(tInt); tInt = null; }
+
+    function render(){
+      if (idx >= questions.length){
+        showResult();
+        sendResultToServer({
+  level: "sulit",
+  score: score,
+  total_questions: questions.length,
+  correct: answersLog.filter(a => a.picked === a.correct).length,
+  duration_seconds: null,
+  answers: answersLog
+});
+        return;
+      }
+
+      locked = false;
+      selected = null;
+      feedbackEl.style.display = 'none';
+      feedbackEl.className = 'feedback';
+      feedbackEl.textContent = '';
+
+      const q = questions[idx];
+      qText.textContent = q.question;
+
+      answersEl.innerHTML = '';
+      q.options.forEach((opt) => {
+        const div = document.createElement('div');
+        div.className = 'ans';
+        div.innerHTML = `
+          <input type="radio" name="opt" />
+          <div><strong>${opt}</strong></div>
+        `;
+        div.addEventListener('click', () => {
+          if (locked) return;
+          sfx();
+          selected = opt;
+          [...answersEl.children].forEach(c => c.classList.remove('selected'));
+          div.classList.add('selected');
+          div.querySelector('input').checked = true;
+        });
+        answersEl.appendChild(div);
+      });
+
+      setProgress();
+      startTimer();
+    }
+
+    function lockAndFeedback(picked, isCorrect, extraMsg){
+      locked = true;
+      stopTimer();
+
+      const q = questions[idx];
+      const correct = q.answer;
+      const explanation = q.explanation || '';
+
+      [...answersEl.children].forEach((node) => {
+        const text = node.querySelector('strong')?.textContent;
+        if (text === correct){
+          node.style.borderColor = 'rgba(46,229,157,.55)';
+          node.style.background = 'rgba(46,229,157,.10)';
         }
+        if (picked && text === picked && picked !== correct){
+          node.style.borderColor = 'rgba(255,77,109,.55)';
+          node.style.background = 'rgba(255,77,109,.10)';
+        }
+      });
+
+      feedbackEl.style.display = 'block';
+      feedbackEl.classList.add(isCorrect ? 'good' : 'bad');
+      feedbackEl.innerHTML = isCorrect
+        ? `✅ <strong>Benar!</strong>${explanation ? '<br><span class="muted">'+explanation+'</span>' : ''}`
+        : `❌ <strong>Salah.</strong> Jawaban yang benar: <strong>${correct}</strong>.` +
+          `${explanation ? '<br><span class="muted">'+explanation+'</span>' : ''}` +
+          `${extraMsg ? '<br><span class="muted">'+extraMsg+'</span>' : ''}`;
+
+      answersLog.push({ q: q.question, picked: picked ?? '(tidak menjawab)', correct, explanation });
+
+      if (isCorrect) score += SCORE_PER_Q;
+      scoreText.textContent = score;
+    }
+
+    function showResult(){
+      stopTimer();
+      play.style.display = 'none';
+      result.style.display = 'block';
+      finalScore.textContent = score;
+      barFill.style.width = '100%';
+
+      review.innerHTML = '';
+      answersLog.forEach((item, i) => {
+        const ok = item.picked === item.correct;
+        const div = document.createElement('div');
+        div.className = 'reviewItem';
+        div.innerHTML = `
+          <div style="font-weight:900; letter-spacing:-.01em; margin-bottom:6px;">
+            ${ok ? '<span class="ok">✅ Benar</span>' : '<span class="no">❌ Salah</span>'}
+            <span class="muted">• Soal ${i+1}</span>
+          </div>
+          <div style="font-weight:800; margin-bottom:6px;">${item.q}</div>
+          <div class="muted">Jawaban kamu: <strong>${item.picked}</strong></div>
+          <div class="muted">Jawaban benar: <strong>${item.correct}</strong></div>
+          ${item.explanation ? `<div class="muted" style="margin-top:6px;">${item.explanation}</div>` : ''}
+        `;
+        review.appendChild(div);
+      });
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (idx >= questions.length) return;
+      sfx();
+
+      if (!locked) {
+        if (!selected) {
+          feedbackEl.style.display = 'block';
+          feedbackEl.className = 'feedback bad';
+          feedbackEl.innerHTML = '⚠️ <strong>Pilih jawaban dulu</strong> sebelum lanjut.';
+          return;
+        }
+        lockAndFeedback(selected, selected === questions[idx].answer);
+        return;
+      }
+
+      idx++;
+      setProgress();
+      render();
     });
 
-    renderQuestion();
-</script>
+    skipBtn.addEventListener('click', () => {
+      if (idx >= questions.length) return;
+      sfx();
+
+      if (!locked) {
+        lockAndFeedback(null, false, 'Kamu melewati soal ini.');
+        return;
+      }
+
+      idx++;
+      setProgress();
+      render();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      sfx();
+      idx = 0;
+      score = 0;
+      answersLog = [];
+      play.style.display = 'block';
+      result.style.display = 'none';
+      barFill.style.width = '0%';
+      setProgress();
+      render();
+    });
+
+    playAgain.addEventListener('click', () => {
+      sfx();
+      idx = 0;
+      score = 0;
+      answersLog = [];
+      play.style.display = 'block';
+      result.style.display = 'none';
+      barFill.style.width = '0%';
+      setProgress();
+      render();
+    });
+
+    // ✅ AUTO START
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Array.isArray(questions) || questions.length === 0) {
+        qText.textContent = 'Pertanyaan belum ada / questions kosong.';
+        totalText.textContent = '0';
+        return;
+      }
+      render();
+    });
+  </script>
 </body>
 </html>

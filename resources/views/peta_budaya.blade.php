@@ -401,29 +401,6 @@ header::after {
         0 0 12px rgba(85, 128, 247, 0.5);
         }
 
-        /* Foto-foto adat */
-        .photo-grid {
-            margin-top: 14px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-        }
-
-        .photo-card {
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(148, 163, 184, 0.85);
-            background: #ffffff;
-            box-shadow: 0 10px 30px rgba(148, 163, 184, 0.4);
-        }
-
-        .photo-card img {
-            width: 100%;
-            height: 130px;
-            object-fit: cover;
-            display: block;
-        }
-
         .photo-body {
             padding: 8px 10px 9px;
         }
@@ -572,37 +549,6 @@ header::after {
                     <div class="info-item">
                         <div class="info-label">Wilayah</div>
                         <div class="info-value" id="detailWilayah">-</div>
-                    </div>
-                </div>
-
-                <!-- Foto adat -->
-                <div class="photo-grid">
-                    <div class="photo-card">
-                        <img id="imgTari" src="img/default-tari.jpg"
-                             alt="Tarian tradisional"
-                             onerror="this.onerror=null;this.src='img/default-tari.jpg';">
-                        <div class="photo-body">
-                            <div class="photo-title">Tarian Tradisional</div>
-                            <div class="photo-caption" id="capTari">Foto contoh tarian tradisional.</div>
-                        </div>
-                    </div>
-                    <div class="photo-card">
-                        <img id="imgRumah" src="img/default-rumah.jpg"
-                             alt="Rumah adat"
-                             onerror="this.onerror=null;this.src='img/default-rumah.jpg';">
-                        <div class="photo-body">
-                            <div class="photo-title">Rumah Adat</div>
-                            <div class="photo-caption" id="capRumah">Foto contoh rumah adat.</div>
-                        </div>
-                    </div>
-                    <div class="photo-card">
-                        <img id="imgMakanan" src="img/default-makanan.jpg"
-                             alt="Makanan khas"
-                             onerror="this.onerror=null;this.src='img/default-makanan.jpg';">
-                        <div class="photo-body">
-                            <div class="photo-title">Makanan Khas</div>
-                            <div class="photo-caption" id="capMakanan">Foto contoh makanan khas.</div>
-                        </div>
                     </div>
                 </div>
 
@@ -816,9 +762,6 @@ header::after {
     const mapWrapper = document.getElementById("mapWrapper");
     const mapInner = document.getElementById("mapInner");
 
-    const imgTariEl    = document.getElementById("imgTari");
-    const imgRumahEl   = document.getElementById("imgRumah");
-    const imgMakananEl = document.getElementById("imgMakanan");
     const capTariEl    = document.getElementById("capTari");
     const capRumahEl   = document.getElementById("capRumah");
     const capMakananEl = document.getElementById("capMakanan");
@@ -867,13 +810,6 @@ function playClickSfx() {
         detailBahasa.textContent    = prov.bahasa;
         detailWilayah.textContent   = prov.wilayah;
         detailDeskripsi.textContent = prov.deskripsi;
-
-        // set foto (nama file: id-tari.jpg, id-rumah.jpg, id-makanan.jpg)
-        const imgBase = "{{ asset('img') }}";
-
-        imgTariEl.src    = imgBase + "/" + prov.id + "-tari.jpg";
-        imgRumahEl.src   = imgBase + "/" + prov.id + "-rumah.jpg";
-        imgMakananEl.src = imgBase + "/" + prov.id + "-makanan.jpg";
 
         capTariEl.textContent    = prov.nama + " • " + prov.tari;
         capRumahEl.textContent   = prov.nama + " • " + prov.rumah;

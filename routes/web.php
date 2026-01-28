@@ -34,7 +34,6 @@ Route::middleware('requireLogin')->group(function () {
 
     // Pemberitahuan
     Route::get('/pemberitahuan', [PemberitahuanController::class, 'index'])->name('pemberitahuan');
-    Route::post('/pemberitahuan', [PemberitahuanController::class, 'store'])->name('pemberitahuan.store');
 
     /*
     |--------------------------------------------------------------------------
@@ -42,16 +41,23 @@ Route::middleware('requireLogin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    // Menu questions.php
+    // Menu kuis
     Route::get('/questions', [QuizController::class, 'menu'])->name('questions');
-
-    // Alias /quiz ke menu yang sama
     Route::get('/quiz', [QuizController::class, 'menu'])->name('quiz');
 
+    // Simpan nickname
+    Route::post('/quiz/nickname', [QuizController::class, 'setNickname'])
+        ->name('quiz.nickname');
+
+    // Simpan hasil kuis
+    Route::post('/quiz/results', [QuizController::class, 'storeResult'])
+        ->name('quiz.results.store');
+
     // Kuis per level
-    Route::get('/quiz/mudah',  [QuizController::class, 'mudah'])->name('quiz.mudah');
+    Route::get('/quiz/mudah', [QuizController::class, 'mudah'])->name('quiz.mudah');
     Route::get('/quiz/normal', [QuizController::class, 'normal'])->name('quiz.normal');
-    Route::get('/quiz/sulit',  [QuizController::class, 'sulit'])->name('quiz.sulit');
+    Route::get('/quiz/sulit', [QuizController::class, 'sulit'])->name('quiz.sulit');
+
 });
 
 /*

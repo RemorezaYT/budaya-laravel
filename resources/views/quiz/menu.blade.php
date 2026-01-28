@@ -1,436 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Kuis Sejarah Budaya Indonesia</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu Kuis • Peta Budaya Indonesia</title>
 
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        :root{
-            --bg: #050814;
-            --panel: rgba(17, 24, 39, 0.55);
-            --border: rgba(255,255,255,0.12);
-            --text: rgba(255,255,255,0.92);
-            --muted: rgba(255,255,255,0.68);
+  <style>
+    :root{
+      --bg1:#0b1020; --bg2:#141a33;
+      --card: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text:#f4f6ff;
+      --muted: rgba(244,246,255,.74);
+      --accent:#7c5cff;
+      --accent2:#2ee59d;
+      --danger:#ff4d6d;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(46,229,157,.22), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      padding: 28px 16px;
+    }
+    .container{width:min(1100px, 100%); margin:0 auto;}
+    .top{display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px;}
+    .brand{display:flex; gap:12px; align-items:center;}
+    .logo{
+      width:44px;height:44px;border-radius:16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display:grid;place-items:center;font-weight:900;
+      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+    }
+    h1{margin:0; font-size:20px; letter-spacing:-.02em;}
+    .muted{color:var(--muted)}
+    a{text-decoration:none;color:inherit}
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-weight:700;
+      font-size: 13px;
+      display:inline-flex; gap:8px; align-items:center;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(12px);
+      padding:16px;
+      margin-bottom:14px;
+    }
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:14px;}
+    @media (max-width: 900px){ .row{grid-template-columns:1fr;} }
 
-            --brand1:#f97316; /* orange */
-            --brand2:#facc15; /* yellow */
-            --brand3:#6366f1; /* indigo */
-        }
+    .modeGrid{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;}
+    @media (max-width: 900px){ .modeGrid{grid-template-columns:1fr;} }
+    .mode{
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      transition: transform .12s ease, border-color .12s ease;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .mode:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.22);}
+    .pill{font-size:12px;font-weight:900;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background: rgba(255,255,255,.06);}
+    .pill.good{border-color: rgba(46,229,157,.45);}
+    .pill.mid{border-color: rgba(124,92,255,.55);}
+    .pill.hard{border-color: rgba(255,77,109,.55);}
 
-        *{ box-sizing:border-box; margin:0; padding:0; }
-        body{
-            font-family:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-            min-height:100vh;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x:hidden;
-        }
-
-        /* Background glow + grid */
-        .bg{
-            position:fixed; inset:0; z-index:-2;
-            background:
-                radial-gradient(circle at 15% 20%, rgba(250,204,21,0.22), transparent 45%),
-                radial-gradient(circle at 80% 25%, rgba(99,102,241,0.18), transparent 45%),
-                radial-gradient(circle at 35% 90%, rgba(249,115,22,0.18), transparent 45%),
-                linear-gradient(180deg, rgba(2,6,23,0.65), rgba(2,6,23,0.95));
-        }
-        .grid{
-            position:fixed; inset:0; z-index:-1;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 44px 44px;
-            mask-image: radial-gradient(circle at 40% 15%, rgba(0,0,0,0.8), transparent 60%);
-            opacity:.35;
-            pointer-events:none;
-        }
-
-        .page-wrap{
-            min-height:100vh;
-            display:flex;
-            flex-direction:column;
-        }
-
-        /* Header */
-        header{
-            position:sticky;
-            top:0;
-            z-index:10;
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(2,6,23,0.55);
-            backdrop-filter: blur(16px);
-        }
-
-        .header-inner{
-            max-width: 1040px;
-            margin:0 auto;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:16px;
-        }
-
-        .brand{
-            display:flex;
-            align-items:center;
-            gap:12px;
-        }
-
-        .brand-logo{
-            width:42px;
-            height:42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--brand1), var(--brand2));
-            box-shadow: 0 18px 50px rgba(249,115,22,0.25);
-            display:grid;
-            place-items:center;
-            font-weight:900;
-            color:#111827;
-        }
-
-        .brand-text b{
-            display:block;
-            letter-spacing:-0.01em;
-        }
-        .brand-text small{
-            display:block;
-            color: var(--muted);
-            margin-top:2px;
-            font-weight:700;
-        }
-
-        .user-mini{
-            text-align:right;
-            font-size: .92rem;
-            color: rgba(255,255,255,0.82);
-        }
-        .user-mini strong{
-            color: rgba(250,204,21,0.95);
-        }
-
-        /* Main */
-        .main{
-            flex:1;
-            width: min(1040px, 100%);
-            margin: 0 auto;
-            padding: 26px 18px 28px;
-        }
-
-        .hero{
-            border: 1px solid var(--border);
-            background: rgba(17, 24, 39, 0.35);
-            backdrop-filter: blur(14px);
-            border-radius: 24px;
-            padding: 22px 22px;
-            box-shadow: 0 28px 90px rgba(0,0,0,0.35);
-            overflow:hidden;
-            position:relative;
-        }
-        .hero::before{
-            content:"";
-            position:absolute;
-            inset:-30%;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(250,204,21,0.16), transparent 55%),
-                radial-gradient(circle at 85% 65%, rgba(99,102,241,0.14), transparent 55%),
-                radial-gradient(circle at 40% 95%, rgba(249,115,22,0.12), transparent 55%);
-            z-index:0;
-        }
-        .hero-inner{ position:relative; z-index:1; }
-
-        .badge{
-            display:inline-flex;
-            align-items:center;
-            gap:10px;
-            padding: 8px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.14);
-            background: rgba(2,6,23,0.30);
-            color: rgba(255,255,255,0.80);
-            font-size: .85rem;
-            font-weight:800;
-            letter-spacing:.06em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-        .badge .dot{
-            width:10px;height:10px;border-radius:999px;
-            background: linear-gradient(135deg, var(--brand1), var(--brand2));
-            box-shadow: 0 0 0 6px rgba(250,204,21,0.10);
-        }
-
-        .headline-title{
-            font-size: clamp(1.6rem, 3.5vw, 2.3rem);
-            font-weight: 900;
-            letter-spacing:-0.02em;
-            margin-bottom: 6px;
-        }
-        .headline-subtitle{
-            color: var(--muted);
-            font-size: 1rem;
-            max-width: 72ch;
-        }
-
-        .grid-menu{
-            margin-top: 18px;
-            display:grid;
-            grid-template-columns: repeat(2, minmax(0,1fr));
-            gap: 18px;
-        }
-
-        /* Card */
-        .menu-card{
-            position:relative;
-            overflow:hidden;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.14);
-            background: rgba(17,24,39,0.45);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 26px 80px rgba(0,0,0,0.35);
-            transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-            min-height: 210px;
-        }
-        .menu-card:hover{
-            transform: translateY(-2px);
-            border-color: rgba(250,204,21,0.22);
-            box-shadow: 0 34px 110px rgba(0,0,0,0.45);
-        }
-
-        .menu-card::before{
-            content:"";
-            position:absolute;
-            inset:-30%;
-            opacity:.95;
-        }
-
-        .menu-card.easy::before{
-            background:
-                radial-gradient(circle at 20% 15%, rgba(250,204,21,0.28), transparent 55%),
-                radial-gradient(circle at 85% 65%, rgba(249,115,22,0.22), transparent 60%);
-        }
-        .menu-card.normal::before{
-            background:
-                radial-gradient(circle at 20% 15%, rgba(34,197,94,0.25), transparent 55%),
-                radial-gradient(circle at 85% 65%, rgba(56,189,248,0.22), transparent 60%);
-        }
-        .menu-card.hard::before{
-            background:
-                radial-gradient(circle at 20% 15%, rgba(34,197,94,0.25), transparent 55%),
-                radial-gradient(circle at 85% 65%, rgba(56,189,248,0.22), transparent 60%);
-        }
-
-        .menu-card-inner{
-            position:relative;
-            z-index:1;
-            padding: 18px 18px 16px;
-            display:flex;
-            flex-direction:column;
-            height:100%;
-        }
-
-        .menu-top{
-            display:flex;
-            align-items:flex-start;
-            justify-content:space-between;
-            gap:12px;
-        }
-
-        .menu-badge{
-            display:inline-flex;
-            gap:8px;
-            align-items:center;
-            padding: 7px 10px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.14);
-            border: 1px solid rgba(255,255,255,0.18);
-            font-size: .78rem;
-            color: rgba(255,255,255,0.85);
-            font-weight: 800;
-        }
-        .menu-badge .mini-dot{
-            width:8px; height:8px; border-radius:999px;
-            background: rgba(255,255,255,0.85);
-            opacity:.8;
-        }
-
-        .menu-icon{
-            width:44px; height:44px;
-            border-radius: 16px;
-            display:grid;
-            place-items:center;
-            background: rgba(2,6,23,0.35);
-            border: 1px solid rgba(255,255,255,0.14);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
-            font-size: 1.25rem;
-        }
-
-        .menu-title{
-            margin-top: 12px;
-            font-size: 1.16rem;
-            font-weight: 900;
-            letter-spacing:-0.01em;
-            color: rgba(255,255,255,0.92);
-        }
-        .menu-desc{
-            margin-top: 8px;
-            color: rgba(255,255,255,0.78);
-            font-size: .92rem;
-            line-height: 1.45;
-            max-width: 60ch;
-        }
-
-        .menu-footer{
-            margin-top:auto;
-            padding-top: 14px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:12px;
-            color: rgba(255,255,255,0.70);
-            font-size: .88rem;
-        }
-
-        .menu-btn{
-            display:inline-flex;
-            align-items:center;
-            gap:10px;
-            padding: 10px 14px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.18);
-            background: rgba(2,6,23,0.45);
-            backdrop-filter: blur(10px);
-            color: rgba(255,255,255,0.90);
-            font-weight: 900;
-            text-decoration:none;
-            letter-spacing: .10em;
-            text-transform: uppercase;
-            transition: transform .12s ease, background .15s ease, border-color .15s ease;
-            white-space: nowrap;
-        }
-        .menu-btn:hover{
-            transform: translateY(-1px);
-            background: rgba(2,6,23,0.60);
-            border-color: rgba(250,204,21,0.24);
-        }
-        .menu-btn:active{ transform: translateY(1px); }
-
-        footer{
-            padding: 12px 18px;
-            text-align:center;
-            font-size: .82rem;
-            color: rgba(255,255,255,0.55);
-            border-top: 1px solid rgba(255,255,255,0.10);
-            background: rgba(2,6,23,0.65);
-            backdrop-filter: blur(16px);
-        }
-
-        @media (max-width: 860px){
-            .grid-menu{ grid-template-columns: 1fr; }
-            .user-mini{ display:none; }
-        }
-    </style>
+    input{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:white;
+      outline:none;
+      width:min(320px, 100%);
+    }
+    button{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(124,92,255,.55);
+      background: rgba(124,92,255,.18);
+      color:white;
+      font-weight:900;
+      cursor:pointer;
+    }
+    table{width:100%; border-collapse:collapse; font-size:14px;}
+    th, td{padding:8px; text-align:left;}
+    thead th{color: rgba(244,246,255,.74);}
+    tbody tr{border-top:1px solid rgba(255,255,255,.10);}
+    .tag{padding:6px 10px; border-radius:999px; background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); display:inline-block;}
+  </style>
 </head>
-
 <body>
-    <div class="bg"></div>
-    <div class="grid"></div>
+  <div class="container">
 
-    <div class="page-wrap">
-        <header>
-            <div class="header-inner">
-                <div class="brand">
-                    <div class="brand-logo">KI</div>
-                    <div class="brand-text">
-                        <b>Kebudayaan Indonesia</b>
-                        <small>Tugas Proyek Pemograman Lanjutan</small>
-                    </div>
-                </div>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🇮🇩</div>
+        <div>
+          <h1>Menu Kuis Budaya</h1>
+          <div class="muted" style="font-size:13px;">Halo, <strong>{{ session('username','User') }}</strong></div>
+        </div>
+      </div>
 
-                <div class="user-mini">
-                    Selamat datang, <strong>{{ session('username', 'Pengguna') }}</strong>
-                </div>
-            </div>
-        </header>
-
-        <main class="main">
-            <section class="hero">
-                <div class="hero-inner">
-                    <div class="badge"><span class="dot"></span> Kuis Sejarah Budaya Indonesia</div>
-                    <div class="headline-title">Pilih Mode Kuis</div>
-                    <div class="headline-subtitle">
-                        Pilih tingkat kesulitan yang ingin kamu coba: mudah, normal, sulit, atau lihat ranking!
-                    </div>
-                </div>
-            </section>
-
-            <section class="grid-menu">
-                <!-- EASY -->
-                <article class="menu-card easy">
-                    <div class="menu-card-inner">
-                        <div class="menu-top">
-                            <div class="menu-badge"><span class="mini-dot"></span> Mudah • Sejarah</div>
-                            <div class="menu-icon">🔰</div>
-                        </div>
-                        <div class="menu-title">Mode Mudah</div>
-                        <div class="menu-desc">
-                            Mulailah dengan soal-soal sejarah budaya Indonesia yang mudah dan menyenangkan.
-                        </div>
-                        <div class="menu-footer">
-                            <span>Mode kesulitan rendah</span>
-                            <a href="{{ route('quiz.mudah') }}" class="menu-btn">Mulai Kuis →</a>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- NORMAL -->
-                <article class="menu-card normal">
-                    <div class="menu-card-inner">
-                        <div class="menu-top">
-                            <div class="menu-badge"><span class="mini-dot"></span> Normal • Sejarah</div>
-                            <div class="menu-icon">🔹</div>
-                        </div>
-                        <div class="menu-title">Mode Normal</div>
-                        <div class="menu-desc">
-                            Tantang dirimu dengan soal-soal sejarah budaya Indonesia yang menantang.
-                        </div>
-                        <div class="menu-footer">
-                            <span>Mode kesulitan sedang</span>
-                            <a href="{{ route('quiz.normal') }}" class="menu-btn">Mulai Kuis →</a>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- HARD -->
-                <article class="menu-card hard">
-                    <div class="menu-card-inner">
-                        <div class="menu-top">
-                            <div class="menu-badge"><span class="mini-dot"></span> Sulit • Sejarah</div>
-                            <div class="menu-icon">🔶</div>
-                        </div>
-                        <div class="menu-title">Mode Sulit</div>
-                        <div class="menu-desc">
-                            Uji pengetahuanmu dengan soal-soal sejarah budaya Indonesia yang lebih sulit.
-                        </div>
-                        <div class="menu-footer">
-                            <span>Mode kesulitan tinggi</span>
-                            <a href="{{ route('quiz.sulit') }}" class="menu-btn">Mulai Kuis →</a>
-                        </div>
-                    </div>
-                </article>
-            </section>
-        </main>
-
-        <footer>
-            &copy; {{ now()->year }} Kebudayaan Indonesia • Halaman utama
-        </footer>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="chip" href="{{ route('home') }}">🏠 Home</a>
+        <a class="chip" href="{{ route('peta-budaya') }}">🗺️ Peta</a>
+      </div>
     </div>
+
+    {{-- NICKNAME --}}
+    <div class="card">
+      <h2 style="margin:0 0 10px; letter-spacing:-.02em;">👤 Nama panggilan untuk kuis</h2>
+
+      <form method="POST" action="{{ route('quiz.nickname') }}" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        @csrf
+        <input name="nickname" value="{{ old('nickname', $nickname) }}" placeholder="Contoh: reza" maxlength="20" required>
+        <button type="submit">Simpan</button>
+
+        @if($nickname)
+          <span class="tag">Aktif: <strong>{{ $nickname }}</strong></span>
+        @else
+          <span class="muted">Isi dulu supaya hasil kuis tersimpan.</span>
+        @endif
+      </form>
+
+      @error('nickname')
+        <div style="margin-top:8px; color:#ff9aa9;">{{ $message }}</div>
+      @enderror
+    </div>
+
+    {{-- PILIH LEVEL --}}
+    <div class="card">
+      <h2 style="margin:0 0 12px; letter-spacing:-.02em;">🎯 Pilih Level</h2>
+
+      <div class="modeGrid">
+        <a class="mode" href="{{ route('quiz.mudah') }}">
+          <div>
+            <div style="font-weight:900;">Mudah</div>
+            <div class="muted" style="font-size:13px;">Pemanasan untuk pemula</div>
+          </div>
+          <div class="pill good">START →</div>
+        </a>
+
+        <a class="mode" href="{{ route('quiz.normal') }}">
+          <div>
+            <div style="font-weight:900;">Normal</div>
+            <div class="muted" style="font-size:13px;">Butuh fokus lebih</div>
+          </div>
+          <div class="pill mid">START →</div>
+        </a>
+
+        <a class="mode" href="{{ route('quiz.sulit') }}">
+          <div>
+            <div style="font-weight:900;">Sulit</div>
+            <div class="muted" style="font-size:13px;">Tantangan maksimal</div>
+          </div>
+          <div class="pill hard">START →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row">
+      {{-- RIWAYAT HASIL (untuk nickname aktif) --}}
+      <div class="card">
+        <h2 style="margin:0 0 12px; letter-spacing:-.02em;">📌 Riwayat Hasil (Nickname aktif)</h2>
+
+        @if(!$nickname)
+          <div class="muted">Isi nickname dulu supaya riwayat bisa tampil.</div>
+        @elseif($history->isEmpty())
+          <div class="muted">Belum ada hasil. Main kuis dulu ya.</div>
+        @else
+          <div style="overflow:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Level</th>
+                  <th>Skor</th>
+                  <th>Benar</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($history as $r)
+                  <tr>
+                    <td>{{ $r->created_at->format('d M Y H:i') }}</td>
+                    <td style="text-transform:capitalize;">{{ $r->level }}</td>
+                    <td><strong>{{ $r->score }}</strong></td>
+                    <td>{{ $r->correct }}/{{ $r->total_questions }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endif
+      </div>
+
+      {{-- LEADERBOARD GLOBAL --}}
+      <div class="card">
+        <h2 style="margin:0 0 12px; letter-spacing:-.02em;">🏆 Leaderboard (Top 20)</h2>
+
+        @if($leaderboard->isEmpty())
+          <div class="muted">Belum ada data. Main kuis dulu supaya leaderboard terisi.</div>
+        @else
+          <div style="overflow:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nickname</th>
+                  <th>Level</th>
+                  <th>Best Skor</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($leaderboard as $i => $l)
+                  <tr>
+                    <td>{{ $i + 1 }}</td>
+                    <td><strong>{{ $l->nickname }}</strong></td>
+                    <td style="text-transform:capitalize;">{{ $l->level }}</td>
+                    <td><strong>{{ $l->best_score }}</strong></td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endif
+      </div>
+    </div>
+
+    <div class="muted" style="font-size:12px; margin-top:10px;">
+      © {{ now()->year }} • Peta Budaya Indonesia
+    </div>
+  </div>
 </body>
 </html>
