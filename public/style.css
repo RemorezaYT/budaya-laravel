@@ -1,0 +1,138 @@
+/* Gaya Umum */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #F8BBD0, #FF8A80); /* Gradasi warna lembut dengan pink cerah */
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 3.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3); /* Bayangan untuk judul */
+}
+
+p {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 40px;
+    font-weight: 500;
+    color: #f1f1f1;
+    line-height: 1.6;
+}
+
+/* Container untuk konten halaman */
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 25px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+}
+
+/* Styling untuk cards */
+.quiz-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.card {
+    background: linear-gradient(45deg, #FFABAB, #FF8D8D); /* Gradasi lembut dari pink cerah */
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 12px 50px rgba(0, 0, 0, 0.4);
+}
+
+.card h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.card p {
+    font-size: 1.1rem;
+    color: #B0B0B0;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+/* Styling untuk tombol */
+.quiz-btn {
+    padding: 18px 35px;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 260px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Tombol dengan gradasi warna */
+.easy {
+    background: linear-gradient(45deg, #64B5F6, #42A5F5); /* Gradasi biru lembut */
+}
+
+.normal {
+    background: linear-gradient(45deg, #FFEE58, #FFEB3B); /* Gradasi kuning cerah */
+}
+
+.hard {
+    background: linear-gradient(45deg, #F44336, #E57373); /* Gradasi merah cerah */
+}
+
+/* Hover dan klik tombol */
+.quiz-btn:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #FF6F61, #FF3D57); /* Efek hover pada tombol */
+}
+
+.quiz-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.7);
+}
+
+/* Penataan tambahan untuk tombol */
+.quiz-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+    font-size: 18px;
+    border-radius: 10px;
+    width: 100%;
+}
