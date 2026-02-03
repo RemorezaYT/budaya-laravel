@@ -95,7 +95,9 @@ cd budaya-laravel
 ---
 
 ## UML Diagrams
-Use Case Diagram
+
+### Use Case Diagram
 ![Use Case Diagram](docs/Diagram/uml.png)
-Class Diagram
+
+### Class Diagram
 ![Class Diagram](docs/Diagram/class.png)
