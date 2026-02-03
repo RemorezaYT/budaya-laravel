@@ -91,3 +91,8 @@ Project ini dikembangkan menggunakan **Laravel Framework** sebagai hasil **migra
 ```bash
 git clone https://github.com/USERNAME/budaya-laravel.git
 cd budaya-laravel
+
+---
+
+## UML Diagrams
+![Use Case Diagram](docs/Diagram/uml.png)
