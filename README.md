@@ -116,7 +116,7 @@ cd budaya-laravel
 ![Halaman Login](docs/apk/login.png)
 
 ### Halaman Utama
-![Halaman Utama](docs/apk/homes.png)
+![Halaman Utama](docs/apk/lobby.png)
 
 ### Halaman Peta Budaya
 ![Halaman Peta 1](docs/apk/map1.png)
