@@ -15,6 +15,10 @@ Aplikasi ini menyajikan **informasi budaya berbasis peta interaktif** serta **fi
 
 Project ini dikembangkan menggunakan **Laravel Framework** sebagai hasil **migrasi dari PHP native ke Laravel**, sehingga memiliki struktur kode yang lebih rapi, aman, dan mudah dikembangkan.
 
+Aplikasi tersedia dalam dua platform:
+- 🌐 **Web Application (Laravel)**
+- 📱 **Mobile Application (Android – WebView)**
+
 ---
 
 ## 🎯 Tujuan Pengembangan
@@ -29,9 +33,18 @@ Project ini dikembangkan menggunakan **Laravel Framework** sebagai hasil **migra
 
 ## 🧩 Tech Stack
 
-### Backend
-- **Laravel 12**
-- PHP **8.2**
+### Backend (Web)
+- **Laravel 11**
+- PHP >= 8.2
+- MySQL / SQLite
+- Blade Template
+- TailwindCSS
+
+### Mobile
+- Android Studio
+- Kotlin
+- Android WebView
+- Emulator Pixel (API 33)
 
 ### Frontend
 - Blade Template
@@ -44,6 +57,44 @@ Project ini dikembangkan menggunakan **Laravel Framework** sebagai hasil **migra
 - Git & GitHub
 - XAMPP
 - Android WebView (Mobile)
+
+---
+
+## 📐 SDLC (Software Development Life Cycle)
+
+Metodologi yang digunakan: **Waterfall dengan iterasi**
+
+| Phase | Aktivitas | Output |
+|------|----------|--------|
+| 1. Planning | Requirement gathering, user story | PRD, User Stories |
+| 2. Analysis | Analisis kebutuhan & fitur | SRS Document |
+| 3. Design | UML, desain database, mockup | UML, ERD |
+| 4. Development | Implementasi Laravel & Android | Source Code |
+| 5. Testing | Pengujian fitur | Test Case |
+| 6. Deployment | Hosting & build APK | Aplikasi |
+| 7. Maintenance | Perbaikan & pengembangan | Update |
+
+---
+
+## 📊 Struktur Database (Sederhana)
+
+| Tabel | Deskripsi |
+|-----|----------|
+| users | Data pengguna |
+| quiz_results | Hasil kuis pengguna |
+| budaya | Data budaya per daerah |
+| stories | Cerita nenek moyang |
+
+---
+
+## 🔌 REST API Endpoint (Internal)
+
+| Method | Endpoint | Deskripsi |
+|------|---------|----------|
+| GET | /api/budaya | Mengambil data budaya |
+| GET | /api/quiz | Mengambil soal kuis |
+| POST | /api/quiz/result | Simpan hasil kuis |
+| GET | /api/leaderboard | Data skor tertinggi |
 
 ---
 
@@ -82,16 +133,7 @@ Project ini dikembangkan menggunakan **Laravel Framework** sebagai hasil **migra
 - Middleware `RequireLogin`
 - File `.env` tidak diunggah ke repository
 - Struktur MVC Laravel
-
----
-
-## 🚀 Cara Menjalankan Project
-
-### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/USERNAME/budaya-laravel.git
-cd budaya-laravel
-```
+  
 ---
 
 ## 📊 UML Diagrams
@@ -138,3 +180,29 @@ cd budaya-laravel
 
 ### Halaman Proses Kuis
 ![Halaman Kuis 3](docs/apk/quiz3.png)
+
+---
+
+## ⚙️ Instalasi (Web Laravel)
+
+### Prasyarat
+Pastikan sudah terinstall:
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- MySQL
+- Git
+
+### Langkah Instalasi
+
+```bash
+git clone https://github.com/USERNAME/budaya-laravel.git
+cd budaya-laravel
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
+Akses di Browser : http://127.0.0.1:8000
