@@ -114,3 +114,27 @@ cd budaya-laravel
 
 ### Halaman Login
 ![Halaman Login](docs/apk/login.png)
+
+### Halaman Utama
+![Halaman Utama](docs/apk/home.png)
+
+### Halaman Peta Budaya
+![Halaman Peta 1](docs/apk/map1.png)
+
+### Halaman Fitur Peta Budaya
+![Halaman Peta 2](docs/apk/map2.png)
+
+### Halaman Literasi & Pemberitahuan
+![Halaman Literasi 1](docs/apk/literation1.png)
+
+### Halaman Fitur Literasi & Pemberitahuan
+![Halaman Literasi 2](docs/apk/literation2.png)
+
+### Halaman Utama Kuis
+![Halaman Kuis 1](docs/apk/quiz1.png)
+
+### Halaman Fitur Nama Kuis
+![Halaman Kuis 2](docs/apk/quiz2.png)
+
+### Halaman Proses Kuis
+![Halaman Kuis 3](docs/apk/quiz3.png)
