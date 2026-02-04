@@ -101,3 +101,9 @@ cd budaya-laravel
 
 ### Class Diagram
 ![Class Diagram](docs/Diagram/class.png)
+
+### Sequence Diagram
+![Sequence Diagram](docs/Diagram/sequence.png)
+
+### Activity Diagram
+![Activity Diagram](docs/Diagram/act.png)
