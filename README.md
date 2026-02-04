@@ -206,3 +206,19 @@ php artisan migrate
 php artisan serve
 ```
 Akses di Browser : http://127.0.0.1:8000
+
+## ⚠️ Troubleshooting
+
+| Error | Penyebab Umum | Solusi |
+|------|---------------|--------|
+| `SQLSTATE: no such table` | Belum migrate | Jalankan: `php artisan migrate` |
+| `Vite manifest not found` | Asset belum dibuild | Jalankan: `npm install` lalu `npm run build` |
+| `Permission denied` | Permission folder storage/cache | Jalankan: `chmod -R 775 storage bootstrap/cache` *(Linux/Mac)* |
+| `Class not found` | Autoload composer belum update | Jalankan: `composer dump-autoload` |
+| `View not found` | File blade belum ada / salah path | Pastikan file ada di `resources/views/...` |
+| `The webpage not available (Android WebView)` | Emulator tidak bisa akses localhost PC | Pakai URL: `http://10.0.2.2:8000` (emulator) |
+
+---
+
+### 💁🏻 Author
+Muhammad Reza Al Ichwan
