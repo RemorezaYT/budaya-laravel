@@ -94,7 +94,7 @@ cd budaya-laravel
 ```
 ---
 
-## UML Diagrams
+## 📊 UML Diagrams
 
 ### Use Case Diagram
 ![Use Case Diagram](docs/Diagram/uml.png)
@@ -110,7 +110,7 @@ cd budaya-laravel
 
 ---
 
-## Mockup & Screenshot
+## 💻 Mockup & Screenshot
 
 ### Halaman Login
 ![Halaman Login](docs/apk/login.png)
